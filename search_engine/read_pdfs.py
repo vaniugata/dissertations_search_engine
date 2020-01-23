@@ -7,7 +7,7 @@ from pdfminer.pdfpage import PDFPage
 from io import StringIO
 import glob
 
-def convert_pdf_to_txt(path):
+def read_pdf(path):
     rsrcmgr = PDFResourceManager()
     retstr = StringIO()
     laparams = LAParams()
@@ -29,11 +29,14 @@ def convert_pdf_to_txt(path):
     retstr.close()
     return text
 
-#read pdfs
-for file_path in glob.glob('src/*'):
-   print(file_path)
-   print(convert_pdf_to_txt(file_path))
-   
+def read_files_from_dir(path):
+    docs = {}
+    for file_path in glob.glob('src/*'):
+        print( 'reading doc: {}'.format(file_path) )
+        docs[file_path] = read_pdf(file_path)
+    
+    return docs
+     
 
     
 
