@@ -31,7 +31,7 @@ def read_pdf(path):
 
 def read_files_from_dir(path):
     docs = {}
-    for file_path in glob.glob('src/*'):
+    for file_path in glob.glob('src/example*'):
         print( 'reading doc: {}'.format(file_path) )
         docs[file_path] = read_pdf(file_path)
     
