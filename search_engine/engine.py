@@ -40,7 +40,7 @@ def tokenize_text(text):
 def format_words(words):
     i = 0
     while i < len(words):
-        words[i] = ''.join( c for c in words[i] if c.isalnum() )
+        words[i] = ''.join( c for c in words[i] if '\\/|&()[]{}+~=@$%^*_'.find(c) == -1 )
         if words[i] == '':
             words.pop(i)
             i = i-1
@@ -95,10 +95,10 @@ def find_author_name(text):
 
         for w in words:
             for kw in key_words:
-                author_key_word |= w[0].lower().find(kw) != -1
+                author_key_word |= w[0].lower().find(kw) != -1 
 
             if author_key_word:
-                if w[1] == 'S':
+                if w[1] == 'S' and w[0][0].isupper():
                     print(w)
             
 
