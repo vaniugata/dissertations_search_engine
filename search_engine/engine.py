@@ -59,7 +59,7 @@ def find_files_by_keywords(words, file_names, words_num_in_files, query):
     for word in (query):
         if word.lower() in words:
             zeroes_and_ones = [0] * total_files
-            linkedlist = words_num_in_files[word].head
+            linkedlist = words_num_in_files[word.lower()].head
             while linkedlist.nextval is not None:
                 zeroes_and_ones[linkedlist.nextval.doc - 1] = 1
                 linkedlist = linkedlist.nextval
@@ -75,7 +75,7 @@ def find_files_by_keywords(words, file_names, words_num_in_files, query):
     files = []    
     print(zeroes_and_ones_of_all_words)
     lis = zeroes_and_ones_of_all_words[0]
-    cnt = 1
+    cnt = 0
     for index in lis:
         if index == 1:
             files.append(file_names[cnt])

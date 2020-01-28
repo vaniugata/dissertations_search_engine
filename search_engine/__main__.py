@@ -5,7 +5,7 @@ import re
 import os
 import sys
 from search_engine import engine
-from search_engine import read_pdfs
+from search_engine import read_documents
 
 if __name__ == "__main__":
 
@@ -15,7 +15,7 @@ if __name__ == "__main__":
     file_names = {}
 
 
-    docs = read_pdfs.read_files_from_dir(src_dir)
+    docs = read_documents.read_files_from_dir(src_dir)
 
     #collect all unique words and index documents
     for doc in docs:
