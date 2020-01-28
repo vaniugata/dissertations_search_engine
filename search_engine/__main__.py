@@ -55,7 +55,9 @@ if __name__ == "__main__":
             break
         elif options == '2':
             for doc in docs:
+                print('Authors for {}:\n'.format(doc))
                 engine.find_author_name(docs[doc])
+                print('--------------------------------------------------------------------------------')
             break
         else:
             options = input("Invalid search option!\n Enter search option: ")

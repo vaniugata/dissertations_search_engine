@@ -91,7 +91,7 @@ def find_author_name(text):
         format_words(words)
         words = pos_tag( words, lang='rus')
         author_key_word = False
-        key_words = ['изготвил', 'съставил', 'написал', 'предал']
+        key_words = ['изготвил', 'съставил', 'написал', 'предал', 'автор']
 
         for w in words:
             for kw in key_words:
