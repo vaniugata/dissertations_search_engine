@@ -39,8 +39,6 @@ def read_MSword(path):
     text = ''.join(p.text for p in doc.paragraphs)
     return text
     
-
-
 def read_files_from_dir(path):
     docs = {}
     for file_path in glob.glob(path):

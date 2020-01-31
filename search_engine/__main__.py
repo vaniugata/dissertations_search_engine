@@ -55,11 +55,11 @@ if __name__ == "__main__":
             break
         elif options == '2':
             for doc in docs:
-                print('Authors for {}:\n'.format(doc))
                 engine.find_author_name(docs[doc])
+                engine.find_faculty_num(docs[doc])
+                path = ''.join(c for c in src_dir if not c.find('*') != -1) + os.path.basename(doc)
+                engine.find_thesis_title(path)
                 print('--------------------------------------------------------------------------------')
             break
         else:
             options = input("Invalid search option!\n Enter search option: ")
-    
-    
