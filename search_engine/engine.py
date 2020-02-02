@@ -31,7 +31,7 @@ def finding_all_unique_words_and_freq(words):
     return word_freq
 
 def tokenize_text(text):
-    Stopwords = set(stopwords.words('bulgarian'))
+    Stopwords = set(stopwords.words('russian'))
     words = word_tokenize(text)
     words = [word for word in words if len(words)>1]
     words = [word.lower() for word in words]
