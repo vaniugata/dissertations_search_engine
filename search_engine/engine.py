@@ -3,10 +3,9 @@ from nltk.corpus import stopwords
 from nltk import pos_tag
 import sys
 import inspect
-import re
-from bs4 import BeautifulSoup
 import os
-    
+from search_engine import read_documents
+
 #structure data in nodes
 class Node:
     def __init__(self ,docId, freq = None):
@@ -48,34 +47,6 @@ def format_words(words):
             i = i-1
         else: 
             i = i+1
-
-def get_file_meta_and_text(path):
-    # credits to akash karothiya: 
-    # https://stackoverflow.com/questions/39012739/need-to-extract-all-the-font-sizes-and-the-text-using-beautifulsoup/39015419#39015419
-    # open the html file
-    htmlData = open(path, 'r', encoding='utf-8', errors='ignore')
-    soup = BeautifulSoup(htmlData, features='lxml')
-
-    font_spans = [ data for data in soup.select('span') if 'font-size' in str(data) ]
-    output = []
-    for i in font_spans:
-        tup = ()
-        # extract fonts-size
-        fonts_size = re.search(r'(?is)(font-size:)(.*?)(px)',str(i.get('style'))).group(2)
-        # extract into font-family and font-style
-        fonts_family = re.search(r'(?is)(font-family:)(.*?)(;)',str(i.get('style'))).group(2)
-        # split fonts-type and fonts-style
-        try:
-            fonts_type = fonts_family.strip().split(',')[0]
-            fonts_style = fonts_family.strip().split(',')[1]
-        except IndexError:
-            fonts_type = fonts_family.strip()
-            fonts_style = None
-        tup = (str(i.text).strip(),fonts_size.strip(),fonts_type, fonts_style)
-        output.append(tup)
-    return output
-    
-
 
 # query documents algorithm
 def find_files_by_keywords(words, file_names, words_num_in_files, query):
@@ -159,7 +130,7 @@ def find_thesis_title(path):
     if path.find('.pdf') != -1:
         #parse pdf to html
         os.system('pdf2txt.py -o out.html -t html {}'.format(path))
-        sentences = get_file_meta_and_text('out.html')
+        sentences = read_documents.get_file_meta_and_text('out.html')
         #if os is windws: os.system('del out.html')
         os.system('rm out.html')
         font_size = 0
@@ -173,4 +144,6 @@ def find_thesis_title(path):
             idx = idx + 1
             
     elif path.find('.doc') != -1:
-        print(path)
+        doc = read_documents.read_MSword(path)
+        [print(p) for p in doc] 
+        
