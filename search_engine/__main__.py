@@ -1,4 +1,5 @@
 import nltk
+from nltk.tokenize import sent_tokenize
 from nltk.stem import WordNetLemmatizer, PorterStemmer
 import glob
 import re
@@ -19,7 +20,7 @@ if __name__ == "__main__":
 
     #collect all unique words and index documents
     for doc in docs:
-        words = engine.tokenize_text( docs[doc] )
+        words = engine.tokenize_to_words( docs[doc] )
         dict_global.update( engine.finding_all_unique_words_and_freq(words) )
         file_names[idx] = os.path.basename(doc)
         idx = idx + 1
@@ -36,7 +37,7 @@ if __name__ == "__main__":
     idx = 1
 
     for doc in docs:
-        words = engine.tokenize_text(docs[doc])
+        words = engine.tokenize_to_words(docs[doc])
         word_freq_in_doc = engine.finding_all_unique_words_and_freq(words)
         for word in word_freq_in_doc.keys():
             linked_list = linked_list_data[word].head
@@ -55,10 +56,12 @@ if __name__ == "__main__":
             break
         elif options == '2':
             for doc in docs:
-                engine.find_author_name(docs[doc])
-                engine.find_faculty_num(docs[doc])
-                path = ''.join(c for c in src_dir if not c.find('*') != -1) + os.path.basename(doc)
-                engine.find_thesis_title(path)
+                sentences = sent_tokenize(docs[doc])
+                engine.find_author_name(sentences)
+                engine.find_faculty_num(sentences)
+                engine.find_university_name(engine.tokenize_to_sentences(docs[doc]))
+                # path = ''.join(c for c in src_dir if not c.find('*') != -1) + os.path.basename(doc)
+                # engine.find_thesis_title(path)
                 print('--------------------------------------------------------------------------------')
             break
         else:

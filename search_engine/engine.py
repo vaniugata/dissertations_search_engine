@@ -29,7 +29,7 @@ def finding_all_unique_words_and_freq(words):
         word_freq[word] = words.count(word)
     return word_freq
 
-def tokenize_text(text):
+def tokenize_to_words(text):
     Stopwords = set(stopwords.words('russian'))
     words = word_tokenize(text)
     words = [word for word in words if len(words)>1]
@@ -38,6 +38,25 @@ def tokenize_text(text):
 
     return finding_all_unique_words_and_freq(words)
 
+def tokenize_to_sentences(text):
+    ai_classification = sent_tokenize(text, language='russian')
+    sentences = []
+    for sent in ai_classification:
+        new_sent = ''
+        should_append = True
+        for c in sent:
+            if c == '\n':
+                sentences.append(new_sent)
+                new_sent = ''
+                should_append = False
+            else:
+                new_sent = new_sent + c
+                should_append = True
+        if should_append:
+            sentences.append(new_sent)
+    
+    return sentences
+                
 def format_words(words):
     i = 0
     while i < len(words):
@@ -82,9 +101,8 @@ def find_files_by_keywords(words, file_names, words_num_in_files, query):
         
     print(files) 
 
-def find_author_name(text):
+def find_author_name(sentences):
     print('Author:')
-    sentences = sent_tokenize(text)
     for sentence in sentences:
 
         words = word_tokenize(sentence)
@@ -107,9 +125,8 @@ def find_author_name(text):
                
 
 
-def find_faculty_num(text):
+def find_faculty_num(sentences):
     print('Faculty num:', end=' ')
-    sentences = sent_tokenize(text)
     for sentence in sentences:
 
         words = word_tokenize(sentence)
@@ -142,8 +159,22 @@ def find_thesis_title(path):
             elif sent[0].lower().find('тема') != -1 and idx < len(sentences)-1:
                 print(sentences[idx + 1][0])
             idx = idx + 1
-            
     elif path.find('.doc') != -1:
         doc = read_documents.read_MSword(path)
         [print(p) for p in doc] 
+            
+def find_university_name(sentences):
+    print('University name: ')
+    file = open('universities_dictionary.txt', 'r')
+    lines = file.readlines()
+    file.close()
+
+    for sentence in sentences:
+        sent = ''.join(c for c in sentence if c.isalnum())
+        for line in lines:
+            line = ''.join(c for c in line if c.isalnum())
+            if line != '' and sent != '' and sent.lower() == line.lower():
+                print(sentence)
+                return
+
         
