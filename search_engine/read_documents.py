@@ -10,6 +10,7 @@ import glob
 import os
 from bs4 import BeautifulSoup
 import re
+from nltk.tokenize import sent_tokenize
 
 def read_pdf(path):
     rsrcmgr = PDFResourceManager()
@@ -66,7 +67,9 @@ def read_MSword(path):
 
     result = []
     for p in doc.paragraphs:
-        result.append((p.text, p.paragraph_format.alignment, p.style.font.name, p.style.font.size))
+        sentences = sent_tokenize(p.text)
+        for sentence in sentences:
+            result.append((sentence, p.style.font.size, p.style.font.name, p.paragraph_format.alignment))
 
     return result
 

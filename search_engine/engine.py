@@ -122,9 +122,6 @@ def find_author_name(sentences):
                 if w[1] == 'S' and len(w[0]) >= 2 and w[0][0].isupper() and not w[0][1].isupper():
                     print(w[0])
 
-               
-
-
 def find_faculty_num(sentences):
     print('Faculty num:', end=' ')
     for sentence in sentences:
@@ -144,28 +141,35 @@ def find_faculty_num(sentences):
                     print(w[0])
 
 def find_thesis_title(path):
+    sentences = []
     if path.find('.pdf') != -1:
         #parse pdf to html
         os.system('pdf2txt.py -o out.html -t html {}'.format(path))
         sentences = read_documents.get_file_meta_and_text('out.html')
-        #if os is windws: os.system('del out.html')
         os.system('rm out.html')
-        font_size = 0
-        idx = 0
-        for sent in sentences:
-            if int(sent[1]) > font_size:
-                font_size = int(sent[1])
+        os.system('del out.html')    
+    elif path.find('.doc') != -1:
+        sentences = read_documents.read_MSword(path)
+        
+    font_size = 0
+    idx = 0
+    new_lines_cnt = 0
+    for sent in sentences:
+        if  isinstance(sent[1], int) or isinstance(sent[1], str):
+            sent_font_size = int(sent[1]) 
+            if sent_font_size > font_size:
+                font_size = sent_font_size
                 print(sent[0])
+                new_lines_cnt = new_lines_cnt + (1 if sent[0].find('\n') else 0)
+                if new_lines_cnt > 1:
+                    break
             elif sent[0].lower().find('тема') != -1 and idx < len(sentences)-1:
                 print(sentences[idx + 1][0])
             idx = idx + 1
-    elif path.find('.doc') != -1:
-        doc = read_documents.read_MSword(path)
-        [print(p) for p in doc] 
             
 def find_university_name(sentences):
     print('University name: ')
-    file = open('universities_dictionary.txt', 'r')
+    file = open('universities_names_dictionary.txt', 'r')
     lines = file.readlines()
     file.close()
 
@@ -177,4 +181,37 @@ def find_university_name(sentences):
                 print(sentence)
                 return
 
-        
+#spellchecker
+def min_edit_dist(word1,word2):
+    len_1=len(word1)
+    len_2=len(word2)
+    x = [[0]*(len_2+1) for _ in range(len_1+1)]#the matrix whose last element ->edit distance
+    for i in range(0,len_1+1):  
+        #initialization of base case values
+        x[i][0]=i
+        for j in range(0,len_2+1):
+            x[0][j]=j
+    for i in range (1,len_1+1):
+        for j in range(1,len_2+1):
+            if word1[i-1]==word2[j-1]:
+                x[i][j] = x[i-1][j-1]
+            else :
+                x[i][j]= min(x[i][j-1],x[i-1][j],x[i-1][j-1])+1
+    return x[i][j]
+
+
+def retrieve_text(word):
+    path="universities_names_dictionary.txt"
+    ffile=open(path,'r')
+    lines=ffile.readlines()
+    ffile.close()
+    distance_list=[]
+    res = ''
+    for i in range( 0, len(lines)-1 ):
+        dist=min_edit_dist(word,lines[i])
+        distance_list.append(dist)
+    for j in range( 0, len(lines)-1 ):
+        if distance_list[j]<=5:
+            res.join(lines[j] + ' ')  
+    
+    return res        
