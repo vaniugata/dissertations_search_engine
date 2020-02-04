@@ -17,7 +17,7 @@ class SlinkedList:
     def __init__(self ,head = None):
         self.head = head
 
-    #helper functions
+#helper functions
 def finding_all_unique_words_and_freq(words):
     words = list(words)
     words_unique = []
@@ -67,6 +67,18 @@ def format_words(words):
         else: 
             i = i+1
 
+def extract_data(docs, src_dir):
+    doc_data = {}
+    for doc in docs:
+        sentences = sent_tokenize(docs[doc])
+        author_name = find_author_name(sentences)
+        fac_num = find_faculty_num(sentences)
+        uni_name = find_university_name(tokenize_to_sentences(docs[doc]))
+        path = ''.join(c for c in src_dir if not c.find('*') != -1) + os.path.basename(doc)
+        title = find_thesis_title(path)
+        doc_data[doc] = (author_name, fac_num, uni_name, title)
+    return doc_data
+
 # query documents algorithm
 def find_files_by_keywords(words, file_names, words_num_in_files, query):
 
@@ -102,7 +114,6 @@ def find_files_by_keywords(words, file_names, words_num_in_files, query):
     print(files) 
 
 def find_author_name(sentences):
-    print('Author:')
     for sentence in sentences:
 
         words = word_tokenize(sentence)
@@ -120,10 +131,11 @@ def find_author_name(sentences):
 
             if author_key_word:
                 if w[1] == 'S' and len(w[0]) >= 2 and w[0][0].isupper() and not w[0][1].isupper():
-                    print(w[0])
+                    return w[0]
+
+    return 'failed to extract info'
 
 def find_faculty_num(sentences):
-    print('Faculty num:', end=' ')
     for sentence in sentences:
 
         words = word_tokenize(sentence)
@@ -138,7 +150,8 @@ def find_faculty_num(sentences):
 
             if faculty_num_key_word:
                 if w[1] == 'NUM=ciph':  
-                    print(w[0])
+                    return w[0]
+    return 'failed to extract info'
 
 def find_thesis_title(path):
     sentences = []
@@ -154,21 +167,23 @@ def find_thesis_title(path):
     font_size = 0
     idx = 0
     new_lines_cnt = 0
+    title = ''
     for sent in sentences:
         if  isinstance(sent[1], int) or isinstance(sent[1], str):
             sent_font_size = int(sent[1]) 
             if sent_font_size > font_size:
                 font_size = sent_font_size
-                print(sent[0])
+                title.join(sent[0])
                 new_lines_cnt = new_lines_cnt + (1 if sent[0].find('\n') else 0)
                 if new_lines_cnt > 1:
                     break
             elif sent[0].lower().find('тема') != -1 and idx < len(sentences)-1:
-                print(sentences[idx + 1][0])
+                title.join(sentences[idx + 1][0])
             idx = idx + 1
+    
+    return title
             
 def find_university_name(sentences):
-    print('University name: ')
     file = open('universities_names_dictionary.txt', 'r')
     lines = file.readlines()
     file.close()
@@ -178,8 +193,9 @@ def find_university_name(sentences):
         for line in lines:
             line = ''.join(c for c in line if c.isalnum())
             if line != '' and sent != '' and sent.lower() == line.lower():
-                print(sentence)
-                return
+                return sentence
+    
+    return 'failed to extract info'
 
 #spellchecker
 def min_edit_dist(word1,word2):
@@ -215,3 +231,7 @@ def retrieve_text(word):
             res.join(lines[j] + ' ')  
     
     return res        
+
+def search( query_data, doc_data ):
+    for entry in query_data:
+        print(entry)
