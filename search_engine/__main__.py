@@ -53,7 +53,7 @@ if __name__ == "__main__":
     ui_mgr = UI.UIMgr()
     ui_mgr.init()
 
-    search_callback = lambda event : engine.search( ( ui_mgr.e_name.get(), ui_mgr.e_number.get(), ui_mgr.e_title.get(), ui_mgr.e_university.get() ), doc_data)
+    search_callback = lambda event : engine.search( ( ui_mgr.e_name.get(), ui_mgr.e_number.get(), ui_mgr.e_university.get(), ui_mgr.e_title.get() ), doc_data, ui_mgr)
     ui_mgr.b_search.bind('<Button-1>', search_callback)
     
     ui_mgr.window.mainloop()

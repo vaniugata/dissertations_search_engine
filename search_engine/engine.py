@@ -232,6 +232,11 @@ def retrieve_text(word):
     
     return res        
 
-def search( query_data, doc_data ):
-    for entry in query_data:
-        print(entry)
+def search( query_data, doc_data, ui_mgr ):
+# 0 - author_name, 1 - fac_num, 2 - uni_name, 3 - title
+    res = []
+    for data_el in doc_data:
+        if query_data[0].find(doc_data[data_el][0]) != -1:
+            res.append(doc_data[data_el])
+
+    ui_mgr.print_result(res)    

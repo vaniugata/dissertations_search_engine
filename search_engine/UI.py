@@ -57,19 +57,16 @@ class UIMgr:
         self.list_result.configure(yscrollcommand=self.sb_result.set)
         self.sb_result.configure(command=self.list_result.yview)
 
-    # temp1=("test 1", "test12", "test13")
-    # temp2=("test 2", "test22")
-    # list_a =[]
-    # list_a.append(temp1)
-    # list_a.append(temp2)
+    def print_result(self, result):
 
-    # list_result = Listbox(window, height=10, width=120)
-    # sb_result = Scrollbar(window)
-    # for item in list_a:
-    #     list_result.insert(END, item)
+        self.list_result = Listbox(self.window, height=10, width=120)
+        self.sb_result = Scrollbar(self.window)
+        for item in result:
+            self.list_result.insert(END, item)
 
-    #l_directory.grid(row=0, column=0)
-    #e_directory.grid(row=0, column=1, columnspan=2)
-    #b_browse.grid(row=0, column=4, columnspan=2)
+        self.list_result.grid(row=4, column=0, rowspan=10, columnspan=5)
+        self.sb_result.grid(row=4, column=4, rowspan=10, sticky=E)
+        self.list_result.configure(yscrollcommand=self.sb_result.set)
+        self.sb_result.configure(command=self.list_result.yview)
 
    
