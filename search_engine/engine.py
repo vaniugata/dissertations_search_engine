@@ -75,8 +75,9 @@ def extract_data(docs, src_dir):
         fac_num = find_faculty_num(sentences)
         uni_name = find_university_name(tokenize_to_sentences(docs[doc]))
         path = ''.join(c for c in src_dir if not c.find('*') != -1) + os.path.basename(doc)
+
         title = find_thesis_title(path)
-        doc_data[doc] = (author_name, fac_num, uni_name, title)
+        doc_data[doc] = (author_name, fac_num, uni_name, title, path)
     return doc_data
 
 # query documents algorithm
@@ -124,16 +125,20 @@ def find_author_name(sentences):
         #TODO refactor name recognition criteria
         author_key_word = False
         key_words = ['изготвил', 'съставил', 'написал', 'предал', 'автор']
-
+        
+        res = ''
         for w in words:
             for kw in key_words:
                 author_key_word |= w[0].lower().find(kw) != -1 
 
             if author_key_word:
                 if w[1] == 'S' and len(w[0]) >= 2 and w[0][0].isupper() and not w[0][1].isupper():
-                    return w[0]
+                    res = res + w[0] + ' '
 
-    return 'failed to extract info'
+        if res != '':
+            return res
+
+    return 'failed to retrieve author'
 
 def find_faculty_num(sentences):
     for sentence in sentences:
@@ -154,6 +159,7 @@ def find_faculty_num(sentences):
     return 'failed to extract info'
 
 def find_thesis_title(path):
+    #
     sentences = []
     if path.find('.pdf') != -1:
         #parse pdf to html
@@ -241,7 +247,7 @@ def search( query_data, doc_data, ui_mgr ):
             if val == '' or doc_data[data_el][idx] == '':
                 idx = idx + 1
                 continue
-            elif val == doc_data[data_el][idx]:
+            elif doc_data[data_el][idx].find( val ) != -1:
                 res.append(doc_data[data_el])
             idx = idx + 1
 
