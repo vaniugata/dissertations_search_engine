@@ -236,7 +236,13 @@ def search( query_data, doc_data, ui_mgr ):
 # 0 - author_name, 1 - fac_num, 2 - uni_name, 3 - title
     res = []
     for data_el in doc_data:
-        if query_data[0].find(doc_data[data_el][0]) != -1:
-            res.append(doc_data[data_el])
+        idx = 0
+        for val in query_data:
+            if val == '' or doc_data[data_el][idx] == '':
+                idx = idx + 1
+                continue
+            elif val == doc_data[data_el][idx]:
+                res.append(doc_data[data_el])
+            idx = idx + 1
 
     ui_mgr.print_result(res)    
