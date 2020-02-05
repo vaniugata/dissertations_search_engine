@@ -75,9 +75,9 @@ def extract_data(docs, src_dir):
         fac_num = find_faculty_num(sentences)
         uni_name = find_university_name(tokenize_to_sentences(docs[doc]))
         path = ''.join(c for c in src_dir if not c.find('*') != -1) + os.path.basename(doc)
-
-        title = find_thesis_title(path)
-        doc_data[doc] = (author_name, fac_num, uni_name, title, path)
+        doc_info = (author_name, fac_num, uni_name)
+        title = find_thesis_title(path, doc_info)
+        doc_data[doc] = doc_info + (title, path)
     return doc_data
 
 # query documents algorithm
@@ -123,15 +123,15 @@ def find_author_name(sentences):
         
         
         #TODO refactor name recognition criteria
-        author_key_word = False
-        key_words = ['изготвил', 'съставил', 'написал', 'предал', 'автор']
+        author_keyword = False
+        keywords = ['изготвил', 'съставил', 'написал', 'предал', 'автор']
         
         res = ''
         for w in words:
-            for kw in key_words:
-                author_key_word |= w[0].lower().find(kw) != -1 
+            for kw in keywords:
+                author_keyword |= w[0].lower().find(kw) != -1 
 
-            if author_key_word:
+            if author_keyword:
                 if w[1] == 'S' and len(w[0]) >= 2 and w[0][0].isupper() and not w[0][1].isupper():
                     res = res + w[0] + ' '
 
@@ -158,8 +158,9 @@ def find_faculty_num(sentences):
                     return w[0]
     return 'failed to extract info'
 
-def find_thesis_title(path):
-    #
+def find_thesis_title(path, doc_info):
+    # 0 - author_name, 1 - fac_num, 2 - uni_name, 3 - title
+    #read documents
     sentences = []
     if path.find('.pdf') != -1:
         #parse pdf to html
@@ -169,25 +170,37 @@ def find_thesis_title(path):
         os.system('del out.html')    
     elif path.find('.doc') != -1:
         sentences = read_documents.read_MSword(path)
-        
-    font_size = 0
-    idx = 0
-    new_lines_cnt = 0
+
+    stop_tag = '#stop#'
+    keywords = ['тема', 'задача', 'задание']
     title = ''
-    for sent in sentences:
-        if  isinstance(sent[1], int) or isinstance(sent[1], str):
-            sent_font_size = int(sent[1]) 
-            if sent_font_size > font_size:
-                font_size = sent_font_size
-                title.join(sent[0])
-                new_lines_cnt = new_lines_cnt + (1 if sent[0].find('\n') else 0)
-                if new_lines_cnt > 1:
-                    break
-            elif sent[0].lower().find('тема') != -1 and idx < len(sentences)-1:
-                title.join(sentences[idx + 1][0])
-            idx = idx + 1
+    extract_data = False
+    for sentence in sentences:
+        # replace extracted data with stop tags
+        for val in doc_info:
+            if sentence[0].find(val) != -1:
+                sentence = (sentence[0].replace(val, stop_tag), sentence[1], sentence[2], sentence[3])
+
+        for kw in keywords:
+            extract_data |= sentence[0].find(kw) != -1
+        if extract_data:
+            title = title + sentence[0]
+            extract_data &= not sentence[0].find(stop_tag) != -1
     
-    return title
+    return title.replace(stop_tag, '')
+    
+
+                
+            
+
+
+
+
+
+
+
+        
+
             
 def find_university_name(sentences):
     file = open('universities_names_dictionary.txt', 'r')
