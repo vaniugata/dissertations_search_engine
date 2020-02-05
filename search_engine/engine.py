@@ -174,18 +174,31 @@ def find_thesis_title(path, doc_info):
     stop_tag = '#stop#'
     keywords = ['тема', 'задача', 'задание']
     title = ''
+    max_font_size = 0
     extract_data = False
     for sentence in sentences:
+        #Find title by keyword and stop tag
         # replace extracted data with stop tags
         for val in doc_info:
             if sentence[0].find(val) != -1:
+                sentences.remove(sentence)
                 sentence = (sentence[0].replace(val, stop_tag), sentence[1], sentence[2], sentence[3])
-
+        # search for keyword
         for kw in keywords:
             extract_data |= sentence[0].find(kw) != -1
+        # extract title
         if extract_data:
             title = title + sentence[0]
             extract_data &= not sentence[0].find(stop_tag) != -1
+        #Find title by font size
+        elif sentence[1] is not None and int(sentence[1]) > max_font_size:
+            max_font_size = int(sentence[1])
+    
+    for sentence in sentences:
+        if int(sentence[1]) == max_font_size:
+            title = title + sentence[0]
+            break
+
     
     return title.replace(stop_tag, '')
     
