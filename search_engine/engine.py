@@ -67,9 +67,29 @@ def format_words(words):
         else: 
             i = i+1
 
+def remove_symbols_from_string(text, symbols):
+    return ''.join( c for c in text if symbols.find(c) == -1 )
+
+def get_matching_chars(lhs, rhs):
+    res = ''
+    i = 0
+    if len(lhs) > len(rhs):
+        while i < len(rhs):
+            if rhs[i].find(lhs[i]) != -1:
+                res = res + res.join(rhs[i])
+            i = i + 1
+    else:
+        while i < len(lhs):
+            if lhs[i].find(rhs[i]) != -1:
+                res = res + res.join(lhs[i])
+            i = i + 1
+    return res
+
+
 def extract_data(docs, src_dir):
     doc_data = {}
     for doc in docs:
+        print('extracting data from: {}'.format(doc))
         sentences = sent_tokenize(docs[doc])
         author_name = find_author_name(sentences)
         fac_num = find_faculty_num(sentences)
@@ -120,8 +140,7 @@ def find_author_name(sentences):
         words = word_tokenize(sentence)
         format_words(words)
         words = pos_tag( words, lang='rus')
-        
-        
+         
         #TODO refactor name recognition criteria
         author_keyword = False
         keywords = ['изготвил', 'съставил', 'написал', 'предал', 'автор']
@@ -136,7 +155,7 @@ def find_author_name(sentences):
                     res = res + w[0] + ' '
 
         if res != '':
-            return res
+            return res[:-1]
 
     return 'failed to retrieve author'
 
@@ -173,6 +192,7 @@ def find_thesis_title(path, doc_info):
 
     stop_tag = '#stop#'
     keywords = ['тема', 'задача', 'задание']
+    doc_info = doc_info + ('изготвил', 'съставил', 'проверил')
     title = ''
     max_font_size = 0
     extract_data = False
@@ -180,12 +200,14 @@ def find_thesis_title(path, doc_info):
         #Find title by keyword and stop tag
         # replace extracted data with stop tags
         for val in doc_info:
-            if sentence[0].find(val) != -1:
-                sentences.remove(sentence)
-                sentence = (sentence[0].replace(val, stop_tag), sentence[1], sentence[2], sentence[3])
+            formated_sentence = remove_symbols_from_string(sentence[0], ',.:!?\'\"\\/')
+            if min_edit_dist(formated_sentence.lower(),val.lower()) <= 2 or formated_sentence.find(val) != -1:
+                if(sentence[0].find(stop_tag) == -1):
+                    sentences.remove(sentence)
+                sentence = (sentence[0].replace(sentence[0], stop_tag), sentence[1], sentence[2], sentence[3])
         # search for keyword
         for kw in keywords:
-            extract_data |= sentence[0].find(kw) != -1
+            extract_data |= min_edit_dist(sentence[0].lower(), kw) <= 2 
         # extract title
         if extract_data:
             title = title + sentence[0]
@@ -195,26 +217,13 @@ def find_thesis_title(path, doc_info):
             max_font_size = int(sentence[1])
     
     for sentence in sentences:
-        if int(sentence[1]) == max_font_size:
+        if sentence[1] is not None and int(sentence[1]) == max_font_size:
             title = title + sentence[0]
             break
-
-    
+    if title == '' or title == stop_tag:
+        print('failed to exrtract title.')
     return title.replace(stop_tag, '')
     
-
-                
-            
-
-
-
-
-
-
-
-        
-
-            
 def find_university_name(sentences):
     file = open('universities_names_dictionary.txt', 'r')
     lines = file.readlines()

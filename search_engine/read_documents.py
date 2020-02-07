@@ -20,7 +20,7 @@ def read_pdf(path):
     file = open(path, 'rb')
     interpreter = PDFPageInterpreter(rsrcmgr, device)
     password = ""
-    maxpages = 3
+    maxpages = 2
     caching = True
     pagenos=set()
 
@@ -66,10 +66,16 @@ def read_MSword(path):
     file.close()
 
     result = []
+    br_count = 0
     for p in doc.paragraphs:
         sentences = sent_tokenize(p.text)
         for sentence in sentences:
             result.append((sentence, p.style.font.size, p.style.font.name, p.paragraph_format.alignment))
+        for run in p.runs:
+            if 'lastRenderedPageBreak' in run._element.xml or 'w:br' in run._element.xml and 'type="page"' in run._element.xml:
+                br_count = br_count + 1
+        if br_count > 3:
+            break
 
     return result
 
