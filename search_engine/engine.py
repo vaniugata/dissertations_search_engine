@@ -289,6 +289,7 @@ def search( query_data, doc_data, ui_mgr ):
     ui_mgr.print_result(res)    
 
 def doc_evaluation( doc, dictionary_path ):
+
     doc = word_tokenize(doc)
     frequency_of_words = finding_all_unique_words_and_freq(doc)
 
@@ -303,10 +304,14 @@ def doc_evaluation( doc, dictionary_path ):
             dictionary[ pair[0] ] = int(pair[1]) 
 
     evaluation = 0
-
+    passes = 0
+    word_count = 0
     for w_coef in dictionary:
         for w in frequency_of_words:
             if w.lower().find(w_coef) != -1:
                 evaluation = evaluation + dictionary[w_coef] * frequency_of_words[w]   
+            if passes == 0:
+                word_count = word_count + frequency_of_words[w] 
+        passes = 1
 
-    return evaluation + len(frequency_of_words)
+    return evaluation + word_count
