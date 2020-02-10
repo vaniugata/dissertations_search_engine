@@ -53,8 +53,8 @@ class UIMgr:
 
         # self.b_info.grid(row=5, column=5)
 
-        self.list_result.grid(row=4, column=0, rowspan=10, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=10, sticky=E)
+        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
+        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
         # self.list_result.configure(yscrollcommand=self.sb_result.set)
         self.sb_result.configure(command=self.list_result.yview)
 
@@ -65,8 +65,8 @@ class UIMgr:
         for item in result:
             self.list_result.insert(END, item)
 
-        self.list_result.grid(row=4, column=0, rowspan=10, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=10, sticky=E)
+        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
+        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
         # self.list_result.configure(yscrollcommand=self.sb_result.set)
         self.sb_result.configure(command=self.list_result.yview)
 
@@ -78,8 +78,8 @@ class UIMgr:
         self.list_result = Listbox(self.window, height=10, width=120)
         for item in self.evaluations:
             self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=10, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=10, sticky=E)
+        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
+        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
         self.sb_result.configure(command=self.list_result.yview)
     
     def show_very_complex(self):
@@ -87,8 +87,8 @@ class UIMgr:
         for item in self.evaluations:
             if item[1] > 15000:
                 self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=10, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=10, sticky=E)
+        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
+        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
         self.sb_result.configure(command=self.list_result.yview)
     
     def show_complex(self):
@@ -96,8 +96,8 @@ class UIMgr:
         for item in self.evaluations:
             if item[1] > 8000 and item[1] <= 15000:
                 self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=10, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=10, sticky=E)
+        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
+        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
         self.sb_result.configure(command=self.list_result.yview)
 
     def show_normal_complex(self):
@@ -105,8 +105,8 @@ class UIMgr:
         for item in self.evaluations:
             if item[1] > 3000 and item[1] <= 8000:
                 self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=10, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=10, sticky=E)
+        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
+        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
         self.sb_result.configure(command=self.list_result.yview)
     
 
@@ -115,8 +115,8 @@ class UIMgr:
         for item in self.evaluations:
             if item[1] > 1500 and item[1] <= 3000:
                 self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=10, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=10, sticky=E)
+        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
+        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
         self.sb_result.configure(command=self.list_result.yview)
     
     def show_trivial(self):
@@ -124,8 +124,8 @@ class UIMgr:
         for item in self.evaluations:
             if item[1] <= 1500:
                 self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=10, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=10, sticky=E)
+        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
+        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
         self.sb_result.configure(command=self.list_result.yview)
         
 
