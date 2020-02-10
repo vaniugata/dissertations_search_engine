@@ -24,7 +24,7 @@ def read_pdf(path):
     caching = True
     pagenos=set()
 
-    for page in PDFPage.get_pages(file, pagenos, password=password,caching=caching, check_extractable=True):
+    for page in PDFPage.get_pages(file, pagenos, maxpages=maxpages, password=password,caching=caching, check_extractable=True):
         interpreter.process_page(page)
 
     text = retstr.getvalue()
@@ -74,8 +74,8 @@ def read_MSword(path):
         for run in p.runs:
             if 'lastRenderedPageBreak' in run._element.xml or 'w:br' in run._element.xml and 'type="page"' in run._element.xml:
                 br_count = br_count + 1
-        # if br_count > 3:
-        #     break
+        if br_count > 3:
+            break
 
     return result
 

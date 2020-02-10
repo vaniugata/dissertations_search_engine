@@ -53,80 +53,56 @@ class UIMgr:
 
         # self.b_info.grid(row=5, column=5)
 
+        self.list_result = Listbox(self.window, height=50, width=120)
         self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
         self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
         # self.list_result.configure(yscrollcommand=self.sb_result.set)
         self.sb_result.configure(command=self.list_result.yview)
 
     def print_result(self, result):
-
-        self.list_result = Listbox(self.window, height=10, width=120)
-        # self.sb_result = Scrollbar(self.window)
+        self.list_result.delete(0, END)
         for item in result:
             self.list_result.insert(END, item)
-
-        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
-        # self.list_result.configure(yscrollcommand=self.sb_result.set)
-        self.sb_result.configure(command=self.list_result.yview)
 
     def set_evaluation(self, evaluations):
         self.evaluations = evaluations
 
 
     def show_all(self):
-        self.list_result = Listbox(self.window, height=10, width=120)
+        self.list_result.delete(0, END)
         for item in self.evaluations:
             self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
-        self.sb_result.configure(command=self.list_result.yview)
     
     def show_very_complex(self):
-        self.list_result = Listbox(self.window, height=10, width=120)
+        self.list_result.delete(0, END)
         for item in self.evaluations:
             if item[1] > 15000:
                 self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
-        self.sb_result.configure(command=self.list_result.yview)
     
     def show_complex(self):
-        self.list_result = Listbox(self.window, height=10, width=120)
+        self.list_result.delete(0, END)
         for item in self.evaluations:
             if item[1] > 8000 and item[1] <= 15000:
                 self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
-        self.sb_result.configure(command=self.list_result.yview)
 
     def show_normal_complex(self):
-        self.list_result = Listbox(self.window, height=10, width=120)
+        self.list_result.delete(0, END)
         for item in self.evaluations:
             if item[1] > 3000 and item[1] <= 8000:
                 self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
-        self.sb_result.configure(command=self.list_result.yview)
     
 
     def show_simple(self):
-        self.list_result = Listbox(self.window, height=10, width=120)
+        self.list_result.delete(0, END)
         for item in self.evaluations:
             if item[1] > 1500 and item[1] <= 3000:
                 self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
-        self.sb_result.configure(command=self.list_result.yview)
     
     def show_trivial(self):
-        self.list_result = Listbox(self.window, height=10, width=120)
+        self.list_result.delete(0, END)
         for item in self.evaluations:
             if item[1] <= 1500:
                 self.list_result.insert(END, item)
-        self.list_result.grid(row=4, column=0, rowspan=70, columnspan=5)
-        self.sb_result.grid(row=4, column=4, rowspan=70, sticky=E)
-        self.sb_result.configure(command=self.list_result.yview)
         
 
    
