@@ -287,3 +287,26 @@ def search( query_data, doc_data, ui_mgr ):
             idx = idx + 1
 
     ui_mgr.print_result(res)    
+
+def doc_evaluation( doc, dictionary_path ):
+    doc = word_tokenize(doc)
+    frequency_of_words = finding_all_unique_words_and_freq(doc)
+
+    file = open(dictionary_path, 'r')
+    lines = file.readlines()
+    file.close()
+
+    dictionary = {}
+    for line in lines:
+        pair = tuple(line.split())
+        if len(pair) > 0:
+            dictionary[ pair[0] ] = int(pair[1]) 
+
+    evaluation = 0
+
+    for w_coef in dictionary:
+        for w in frequency_of_words:
+            if w.lower().find(w_coef) != -1:
+                evaluation = evaluation + dictionary[w_coef] * frequency_of_words[w]   
+
+    return evaluation + len(frequency_of_words)

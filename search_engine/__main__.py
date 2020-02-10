@@ -18,13 +18,16 @@ if __name__ == "__main__":
 
     docs = read_documents.read_files_from_dir(src_dir)
 
+    evaluiaton_list = []
+
     #collect all unique words and index documents
     for doc in docs:
+        #evaluation
+        evaluiaton_list.append( (doc, engine.doc_evaluation(docs[doc], 'term_dictionary.txt') ) ) 
         words = engine.tokenize_to_words( docs[doc] )
         dict_global.update( engine.finding_all_unique_words_and_freq(words) )
         file_names[idx] = os.path.basename(doc)
         idx = idx + 1
-
     
     unique_words_all = set(dict_global.keys())
 
@@ -55,5 +58,6 @@ if __name__ == "__main__":
 
     search_callback = lambda event : engine.search( ( ui_mgr.e_name.get(), ui_mgr.e_number.get(), ui_mgr.e_university.get(), ui_mgr.e_title.get() ), doc_data, ui_mgr)
     ui_mgr.b_search.bind('<Button-1>', search_callback)
+    ui_mgr.set_evaluation(evaluiaton_list)
     
     ui_mgr.window.mainloop()
