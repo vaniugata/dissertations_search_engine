@@ -19,6 +19,7 @@ class UIMgr:
 
     def init(self):
         self.window = Tk()
+        self.window.title('Търсене в корпус от стари курсови проекти')
         self.l_title = Label(self.window, text="Тема: ")
         self.e_title = Entry(self.window)
         self.l_university = Label(self.window, text="Университет: ")
