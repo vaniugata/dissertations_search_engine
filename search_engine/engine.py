@@ -225,7 +225,7 @@ def find_thesis_title(path, doc_info):
     return title.replace(stop_tag, '')
     
 def find_university_name(sentences):
-    file = open('universities_names_dictionary.txt', 'r')
+    file = open('universities_names_dictionary.txt', 'r', errors='ignore')
     lines = file.readlines()
     file.close()
 
@@ -259,7 +259,7 @@ def min_edit_dist(word1,word2):
 
 def retrieve_text(word):
     path="universities_names_dictionary.txt"
-    ffile=open(path,'r')
+    ffile=open(path,'r', errors='ignore')
     lines=ffile.readlines()
     ffile.close()
     distance_list=[]
